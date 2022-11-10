@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8"/>
+<!-- Set the viewport width to device width for mobile -->
+<meta name="viewport" content="width=device-width"/>
+<title>Social Trader</title>
+<!-- CSS Files-->
+<link rel="stylesheet" href="stylesheets/style.css">
+
+<link rel="stylesheet" href="stylesheets/skins/red.css">
+<!-- skin color -->
+<link rel="stylesheet" href="stylesheets/responsive.css">
+<!-- IE Fix for HTML5 Tags -->
+<!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<!-- HEADER
+================================================== -->
+<div class="row">
+	<div class="headerlogo four columns">
+		<div class="logo">
+			<a href="index.html">
+			<h4>Social Trader</h4>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="clear">
+</div>
+<!-- SLIDER 
+================================================== -->
+<div id="Cotizacion" class="Cotizacion">
+	<h3 style="text-align: center;">Herramienta de gestion del riesgo</h3>
+	<div class="header__content text-center" style="margin-top: 2%;">
+        <form action="http://127.0.0.1:5000/api/product/info" method="GET" id="urlform">
+			<label for="codeP" style="margin-top: 2%;">Instrumento</label>
+			<select name="lenguajes" id="codeP" style="width: 20%;">
+				<option value="eur-usd">EURUSD</option>
+			</select>
+			<label for="entryP" style="margin-top: 2%;">Entry Price</label>
+			<input id="entryP" class="url_field" name="URLlink"/>
+			<label for="risk" style="margin-top: 2%;">Riesgo</label>
+			<input id="risk" class="url_field" name="URLlink"/>
+			<label for="stopL" style="margin-top: 2%;">Stop Loss</label>
+			<input id="stopL" class="url_field" name="URLlink"/>
+        </form>
+        <button class="header__button" style="margin-bottom: 2%;">Calcular</button>
+    </div>
+
+	<div id="questionsform" style="margin-bottom: 2%;">
+
+	</div>
+
+	<table class="Cot" style="width: 90%; margin: auto; margin-bottom: 20%;">
+		<tr>
+		  <th style="font-size: medium; padding: 15px;">Lote</th>
+		  <th style="font-size: medium; padding: 15px;">Riesgo real</th>
+		</tr>
+	</table>
+</div>
+
+<!-- FOOOTER 
+================================================== -->
+<div id="footer">
+	<footer class="row">
+	<p class="back-top floatright">
+		<a href="#top"><span></span></a>
+	</p>
+	<div class="four columns">
+		<h1>Herramienta para manejo del riesgo</h1>
+	</div>
+
+
+	</footer>
+</div>
+<div class="copyright">
+	<div class="row">
+		<div class="six columns">
+			 &copy;<span class="small"> Copyright Social Trader </span>
+		</div>
+		<div class="six columns">
+			<span class="small floatright">Sitio web desarrollado por <a target="_blank" href="https://www.linkedin.com/in/sebastiancalleu/">Sebastian Calle Uribe</a> </span>
+		</div>
+	</div>
+</div>
+<!-- JAVASCRIPTS 
+================================================== -->
+<!-- Javascript files placed here for faster loading -->
+
+<script src="javascripts/foundation.min.js"></script>
+<script src="javascripts/jquery.easing.1.3.js"></script>  
+<script src="javascripts/elasticslideshow.js"></script>
+<script src="javascripts/jquery.carouFredSel-6.0.5-packed.js"></script>
+<script src="javascripts/jquery.cycle.js"></script>
+<script src="javascripts/app.js"></script>
+<script src="javascripts/modernizr.foundation.js"></script>
+<script src="javascripts/slidepanel.js"></script>
+<script src="javascripts/scrolltotop.js"></script>
+<script src="javascripts/hoverIntent.js"></script>
+<script src="javascripts/superfish.js"></script>
+<script src="javascripts/responsivemenu.js"></script>
+<script>
+	var formatter = new Intl.NumberFormat('es-co', {
+	style: 'currency',
+	currency: 'COP',
+
+	// These options are needed to round to whole numbers if that's what you want.
+	//minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+	//maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+	});
+
+
+	$(".header__button").click(function() {
+
+		if (document.querySelectorAll('tr')[1]) {
+			document.querySelectorAll('tr')[1].remove()
+		}
+
+	  	let codeField = $("#codeP").val()
+		let entryPrice = $("#entryP").val()
+		let risk = String($("#risk").val())
+		let stopLoss = String($("#stopL").val())
+		let cash2 = String($("#CashPP2").val())
+		$("#questionsform").append("<div class='chargeqst' id='chargequestions'></div>")
+    	$("#chargequestions").append("<div class='loader' style='font-size: large; margin: auto;'>Cargando...</div>")
+
+		let absMove = risk / (Math.abs(entryPrice - stopLoss) * 100000);
+		let realRisk = Math.abs(entryPrice - stopLoss) * 100000 * absMove.toFixed(2);
+
+		let newRow = document.createElement("tr");
+		let newCell1 = document.createElement("th");
+
+		newCell1.innerHTML = `<p style='font-size: 130px'>${absMove.toFixed(2)}</p>`
+		newRow.append(newCell1);
+
+		let newCell2 = document.createElement("th");
+
+		newCell2.innerHTML = `<p style='font-size: 130px'>${realRisk.toFixed(2)}</p>`
+		newRow.append(newCell2);
+
+		document.querySelector('[class="Cot"]').appendChild(newRow);
+		$("#questionsform").empty()
+	})
+
+</script>
+</body>
+</html>
